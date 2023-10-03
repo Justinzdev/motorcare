@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="544dp"
+        android:layout_height="503dp"
+        android:layout_marginBottom="592dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/btn_circle" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="154dp"
+        android:layout_height="139dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.111"
+        app:srcCompat="@drawable/user" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="147dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="136dp"
+        android:layout_marginBottom="14dp"
+        android:text="Store name"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="165dp"
+        android:layout_marginTop="-15dp"
+        android:layout_marginEnd="166dp"
+        android:inputType="phone"
+        android:padding="20dp"
+        android:text="XXX-XXX-XXXX"
+        android:textColor="#5A5A5A"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.87">
+
+        <EditText
+            android:id="@+id/position"
+            android:layout_width="329dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_background4"
+            android:drawableLeft="@drawable/baseline_location_on_24"
+            android:drawablePadding="8dp"
+            android:hint="ตำแหน่งร้าน"
+            android:padding="8dp"
+            android:paddingStart="22dp" />
+
+        <EditText
+            android:id="@+id/service"
+            android:layout_width="329dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_background4"
+            android:drawableLeft="@drawable/baseline_check_circle_24"
+            android:drawablePadding="8dp"
+            android:hint="จำนวนการให้บริการ"
+            android:padding="8dp"
+            android:paddingStart="22dp" />
+
+        <EditText
+            android:id="@+id/response"
+            android:layout_width="329dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_background4"
+            android:drawableLeft="@drawable/baseline_access_time_24"
+            android:drawablePadding="8dp"
+            android:hint="ความรวดเร็วในการตอบรับ"
+            android:padding="8dp"
+            android:paddingStart="22dp" />
+
+        <EditText
+            android:id="@+id/acc"
+            android:layout_width="329dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_background4"
+            android:drawableLeft="@drawable/baseline_account_circle_24"
+            android:drawablePadding="8dp"
+            android:hint="เกี่ยวกับบัญชี"
+            android:padding="8dp"
+            android:paddingStart="22dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

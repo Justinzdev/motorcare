@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">My Project</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="text1">เลือก</string>
+    <string name="text2">ดูโปรไฟล์</string>
+    <string name="shop1">ร้านซ่อมมอเตอร์ไซค์พี่บีมอ.</string>
+    <string name="shop2">ร้านช่างตี้มอเตอร์ไซค์</string>
+    <string name="shop3">ร้านช่างจู๊ด</string>
+    <string name="shop4">ช่างเทน เซอร์วิสหาดใหญ่</string>
+    <string name="shop5">ช่างเดี่ยวเซอร์วิส</string>
+    <string name="shop6">เออีโอ มอเตอร์สปอร์ต</string>
+    <string name="shop7">Pop Up Shop</string>
+    <string name="time1">10:00-19:00</string>
+    <string name="time2">09:00-19:00 . ปิดทำการวันอาทิตย์</string>
+    //ปิดวันอา
+    <string name="time3">10:00-19:00</string>
+    <string name="time4">08:30-21:00</string>
+    <string name="time5">08:00-18:00</string>
+    <string name="time6">10:00-18:00 . ปิดทำการวันอาทิตย์</string>
+    //ปิดวันอา
+    <string name="time7">08:00-17:00 . ปิดทำการวันอาทิตย์</string>
+    <string name="title_activity_home">activity_home</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    //ปิดวันอา
+</resources>

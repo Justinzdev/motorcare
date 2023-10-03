@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/MyMap"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/MyMap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_background2"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconSize="30dp"/>
+
+    <View
+        android:id="@+id/Shop_View"
+        android:layout_width="413dp"
+        android:layout_height="326dp"
+        android:background="#FFFFFF"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="@+id/MyMap"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/shopName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="TextView"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/Shop_View"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/timeOpen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shopName"
+        app:layout_constraintVertical_bias="0.074" />
+
+    <Button
+        android:id="@+id/buttonProfileShop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fadingEdge="horizontal|vertical"
+        android:fontFamily="@font/allerta_stencil"
+        android:text="ดูโปรไฟล์ร้านค้า"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="@+id/Shop_View"
+        app:layout_constraintHorizontal_bias="0.043"
+        app:layout_constraintStart_toStartOf="@+id/Shop_View"
+        app:layout_constraintTop_toBottomOf="@+id/timeOpen"
+        app:layout_constraintVertical_bias="0.239" />
+
+    <Button
+        android:id="@+id/buttonUseService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#99FF73"
+        android:fadeScrollbars="false"
+        android:fadingEdge="horizontal"
+        android:fontFamily="@font/allerta_stencil"
+        android:text="ใช้บริการร้านนี้"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonProfileShop"
+        app:layout_constraintEnd_toEndOf="@+id/Shop_View"
+        app:layout_constraintHorizontal_bias="0.175"
+        app:layout_constraintStart_toEndOf="@+id/buttonProfileShop"
+        app:layout_constraintTop_toTopOf="@+id/buttonProfileShop"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="52dp"
+        android:layout_height="37dp"
+        android:backgroundTint="#E43535"
+        android:fontFamily="@font/allerta_stencil"
+        android:text="ปิด"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="@+id/Shop_View"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/Shop_View"
+        app:layout_constraintVertical_bias="0.03" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

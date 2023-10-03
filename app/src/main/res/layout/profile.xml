@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey3" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="682dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
+
+
+
+            <ImageView
+                android:id="@+id/imageView11"
+                android:layout_width="137dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="60dp"
+                app:srcCompat="@drawable/profile" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="sans-serif"
+                android:text="Username"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="30dp" />
+
+            <Button
+                android:id="@+id/editprofile"
+                android:layout_width="232dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/btn_circle2"
+                android:fontFamily="sans-serif"
+                android:padding="15dp"
+                android:text="แก้ไขโปรไฟล์"
+                android:textColor="#ffffff"
+                android:elevation="10dp"
+                android:translationZ="10dp"
+                android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/logOut"
+            android:background="@drawable/btn_background2"
+            android:layout_width="314dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center_horizontal"
+            android:elevation="70dp"
+            android:fontFamily="sans-serif"
+            android:text="ออกจากระบบ"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:translationZ="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"/>
+
+        <Button
+            android:id="@+id/deleteAccount"
+            android:background="@drawable/btn_background2"
+            android:layout_width="314dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center_horizontal"
+            android:elevation="70dp"
+            android:fontFamily="sans-serif"
+            android:text="ปิดใช้งานบัญชี"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:translationZ="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"/>
+
+        </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_background2"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconSize="30dp"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

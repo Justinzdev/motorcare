@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/layoutDialog"
+        android:background="@drawable/custom_bkg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/location"
+            android:text="ตำแหน่งร้าน"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:paddingTop="28dp"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@id/layoutDialog"/>
+
+        <TextView
+            android:id="@+id/dtLocation"
+            android:layout_width="302dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_horizontal"
+            android:inputType="text"
+            android:text="ศรีภูวนารถ ซ.2 หาดใหญ่ สงขลา"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/done"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/location" />
+        <Button
+            android:id="@+id/done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="40dp"
+            android:backgroundTint="@color/red"
+            android:textSize="14sp"
+            android:text="ตกลง"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dtLocation" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
