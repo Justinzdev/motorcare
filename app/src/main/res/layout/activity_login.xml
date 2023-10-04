@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/green"
+        android:background="@color/blue"
         android:alpha="0.6"/>
 
     <LinearLayout
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:text="Welcome"
                 android:letterSpacing="0.1"
-                android:textColor="@color/green"
+                android:textColor="@color/blue"
                 android:textSize="32sp"
                 android:textStyle="bold" />
 
@@ -101,7 +101,7 @@
                 android:id="@+id/loginBtn"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/btn_background2"
+                android:background="@color/blue"
                 android:elevation="10dp"
                 android:text="LOGIN"
                 android:textColor="#ffff"

@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/service"
+            android:id="@+id/serviceCount"
             android:text="จำนวนการให้บริการ"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -40,7 +40,7 @@
             app:layout_constraintBottom_toTopOf="@+id/done"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/service" />
+            app:layout_constraintTop_toBottomOf="@+id/serviceCount" />
         <Button
             android:id="@+id/done"
             android:layout_width="wrap_content"

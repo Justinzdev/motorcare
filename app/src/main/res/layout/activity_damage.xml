@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/btn_background2"
+    android:background="@color/blue"
     tools:context=".LoginActivity">
 
     <LinearLayout
@@ -12,19 +12,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imageView12"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical"
-            app:srcCompat="@drawable/baseline_arrow_back_ios_24" />
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp">
+
+            <ImageButton
+                android:id="@+id/imageButtonBack"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:background="#00FFFFFF"
+                android:orientation="vertical"
+                app:srcCompat="@drawable/baseline_arrow_back_ios_24" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -84,15 +85,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:alpha="0.7"
-                    android:text="รุ่น"
+                    android:text="สีของรถ"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/modelEditText"
+                    android:id="@+id/vehicleColorEditText"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:hint="เช่น Wave 125i..."
+                    android:hint="เช่น สีเหลือง..."
+                    android:inputType="text"
+                    android:padding="8dp"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.7"
+                    android:text="เลขทะเบียนรถ"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/plateEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="ระบุเลขทะเบียนรถ..."
                     android:inputType="text"
                     android:padding="8dp"
                     android:textSize="12sp" />
@@ -122,18 +144,44 @@
                     android:layout_width="wrap_content"
                     android:layout_height="35dp" />
 
+                <HorizontalScrollView
+                    android:id="@+id/horizontalScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/imageContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
                 <Button
                     android:id="@+id/addImageButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:background="@drawable/btn_background2"
+                    android:background="@color/blue"
                     android:onClick="onAddImageClick"
                     android:text="เพิ่มรูปภาพ"
                     android:textSize="20sp"
                     android:textColor="@color/white" />
 
                 <!-- ImageView สำหรับแสดงรูปภาพ (สามารถเรียกใช้โดยโค้ด Java/Kotlin) -->
+                <Button
+                    android:id="@+id/submitButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/blue"
+                    android:onClick="onAddImageClick"
+                    android:text="ส่ง"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
@@ -142,12 +190,6 @@
                     android:layout_marginTop="16dp"
                     android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="116dp"
-                    android:layout_height="59dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/next" />
             </LinearLayout>
 
         </ScrollView>

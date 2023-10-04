@@ -1,8 +1,10 @@
 package com.example.myproject;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.myproject.api.bikeRepairService;
+import com.example.myproject.api.userService;
+import com.example.myproject.model.MarkerInfo;
+import com.example.myproject.model.UserDataResponse;
+import com.example.myproject.model.bikeRepairData;
+import com.example.myproject.model.bikeRepairResponse;
+import com.example.myproject.model.userData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -19,16 +33,45 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, HomeActivity_MarkerClick, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
+    private boolean allowClickMap = true;
+    private static bikeRepairService apiService;
+
+    private Map<Marker, MarkerInfo> markerToIndexMap = new HashMap<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(AppConfig.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        apiService = retrofit.create(bikeRepairService.class);
 
         // Check for location permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -38,7 +81,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
         } else {
-            // Permission is already granted, proceed with map initialization
             initializeMap();  //บรรทัดที่36
         }
     }
@@ -51,8 +93,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted, proceed with map initialization
                 initializeMap();
-            } else {
-                // Permission denied, handle it or show a message to the user
             }
         }
     }
@@ -67,80 +107,72 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Check for location permission again
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            // Permission is granted, enable the "My Location" button on the map
-            mMap.setMyLocationEnabled(true);
-
+                == PackageManager.PERMISSION_GRANTED) {mMap.setMyLocationEnabled(true);
             mMap.setOnMarkerClickListener(this);
 
+            Call<bikeRepairResponse> call = apiService.getData();
+            call.enqueue(new Callback<bikeRepairResponse>() {
+                @Override
+                public void onResponse(Call<bikeRepairResponse> call, Response<bikeRepairResponse> response) {
+                    if (response.isSuccessful()) {
+                        bikeRepairResponse bikeResponse = response.body();
+                        if (bikeResponse != null) {
+                            JsonArray value = bikeResponse.getValue();
+                            if (value != null) {
+                                List<LatLng> locationList = new ArrayList<>();
 
-            LatLng[] locations = new LatLng[]{
-                    new LatLng(7.000322437764077, 100.49198694532629),
-                    new LatLng(7.000504133861651, 100.49419373279413),
-                    new LatLng(6.996795655918778, 100.4916382581544),
-                    new LatLng(7.012590425888277, 100.48535798428674),
-                    new LatLng(6.99818733693373, 100.47974534338373),
-                    new LatLng(7.014167743739746, 100.49243889754723),
-                    new LatLng(7.019960514056645, 100.49750827271585),
-                    // เพิ่มตำแหน่งอื่นๆ ที่ต้องการ
-            };
+                                for (JsonElement locationElement : value) {
+                                    if (locationElement.isJsonObject()) {
+                                        JsonObject locationObject = locationElement.getAsJsonObject();
 
-//            for (LatLng location : locations) {
-//                mMap.addMarker(new MarkerOptions().position(locations[0]).title("ร้านซ่อมมอเตอร์ไซค์พี่บีมอ."));
-//                mMap.addMarker(new MarkerOptions().position(locations[1]).title("ร้านช่างตี้มอเตอร์ไซค์"));
-//                mMap.addMarker(new MarkerOptions().position(locations[2]).title("ร้านช่างจู๊ด"));
-//                mMap.addMarker(new MarkerOptions().position(locations[3]).title("ช่างเทน เซอร์วิสหาดใหญ่"));
-//                mMap.addMarker(new MarkerOptions().position(locations[4]).title("ช่างเดี่ยวเซอร์วิส"));
-//                mMap.addMarker(new MarkerOptions().position(locations[5]).title("เออีโอ มอเตอร์สปอร์ต"));
-//                mMap.addMarker(new MarkerOptions().position(locations[6]).title("Pop Up Shop"));
-//            }
+                                        double bp_lat = locationObject.get("bp_lat").getAsDouble();
+                                        double bp_lng = locationObject.get("bp_lng").getAsDouble();
 
-            for (int i = 0; i < locations.length; i++) {
-                LatLng location = locations[i];
-                String title = "ร้านซ่อมมอเตอร์ไซค์พี่บีมอ.";
-                String timeOpen = "";
-                switch (i) {
-                    case 0:
-                        title = "ร้านซ่อมมอเตอร์ไซค์พี่บีมอ.";
-                        timeOpen = "9:00 AM - 6:00 PM";
-                        break;
-                    case 1:
-                        title = "ร้านช่างตี้มอเตอร์ไซค์";
-                        timeOpen = "8:30 AM - 5:30 PM";
-                        break;
-                    case 2:
-                        title = "ร้านช่างจู๊ด";
-                        timeOpen = "10:00 AM - 7:00 PM";
-                        break;
-                    case 3:
-                        title = "ช่างเทน เซอร์วิสหาดใหญ่";
-                        timeOpen = "10:00 AM - 7:00 PM";
-                        break;
-                    case 4:
-                        title = "ช่างเดี่ยวเซอร์วิส";
-                        timeOpen = "9:00 AM - 6:00 PM";
-                        break;
-                    case 5:
-                        title = "เออีโอ มอเตอร์สปอร์ต";
-                        timeOpen = "9:00 AM - 6:00 PM";
-                        break;
-                    case 6:
-                        title = "Pop Up Shop";
-                        timeOpen = "9:00 AM - 6:00 PM";
-                        break;
+                                        LatLng location = new LatLng(bp_lat, bp_lng);
+
+                                        locationList.add(location);
+
+                                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                                .position(location)
+                                                .title(locationObject.get("bp_name").getAsString())
+                                                .snippet("เบอร์โทรศัพท์: " + locationObject.get("bp_phone").getAsString() +
+                                                        "\nเวลาทำการ: " + locationObject.get("bp_open").getAsString() +
+                                                        " - " + locationObject.get("bp_close").getAsString()));
+
+                                        MarkerInfo markerInfo = new MarkerInfo(locationObject.get("bp_count_use").getAsInt(), locationObject.get("bp_id").getAsInt());
+                                        markerToIndexMap.put(marker, markerInfo);
+                                    }
+                                }
+
+                                if (!locationList.isEmpty()) {
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(locationList.get(0)));
+                                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                                }
+                            }
+                        }
+                    } else {
+                        String errorResponse = null;
+                        try {
+                            errorResponse = response.errorBody().string();
+                            Gson gson = new Gson();
+                            UserDataResponse userDataResponse = gson.fromJson(errorResponse, UserDataResponse.class);
+
+                            if (userDataResponse != null) {
+                                String msg = userDataResponse.getMsg();
+                                Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 }
 
-                mMap.addMarker(new MarkerOptions().position(location).title(title).snippet("เวลาเปิด: " + timeOpen));
-            }
-
-
-            if (locations.length > 0) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(locations[0]));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-            }
+                @Override
+                public void onFailure(Call<bikeRepairResponse> call, Throwable t) {
+                    Log.e("API Request Failed", t.getMessage());
+                }
+            });
         }
     }
 
@@ -164,35 +196,75 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        View Shop_View = findViewById(R.id.Shop_View);
-        TextView shopName = findViewById(R.id.shopName);
-        TextView shopTimeOpen = findViewById(R.id.timeOpen);
-        Button buttonProfileShop = findViewById(R.id.buttonProfileShop);
-        Button buttonUseService = findViewById(R.id.buttonUseService);
-        Button closeButton = findViewById(R.id.closeButton);
+        if(allowClickMap) {
+            MarkerInfo markerInfo = markerToIndexMap.get(marker);
+            if (markerInfo != null) {
+                Integer bp_count_use = markerInfo.getBPCountUse();
+                Integer bp_id = markerInfo.getBPID();
+                View Shop_View = findViewById(R.id.Shop_View);
+                TextView shopName = findViewById(R.id.shopName);
+                TextView shopTimeOpen = findViewById(R.id.timeOpen);
+                Button buttonProfileShop = findViewById(R.id.buttonProfileShop);
+                Button buttonUseService = findViewById(R.id.buttonUseService);
+                Button closeButton = findViewById(R.id.closeButton);
 
-        shopName.setText(marker.getTitle());
-        shopTimeOpen.setText(marker.getSnippet());
-        Shop_View.setVisibility(View.VISIBLE);
-        shopName.setVisibility(View.VISIBLE);
-        shopTimeOpen.setVisibility(View.VISIBLE);
-        buttonProfileShop.setVisibility(View.VISIBLE);
-        buttonUseService.setVisibility(View.VISIBLE);
-        closeButton.setVisibility(View.VISIBLE);
+                shopName.setText(marker.getTitle());
+                shopTimeOpen.setText(marker.getSnippet());
+                Shop_View.setVisibility(View.VISIBLE);
+                shopName.setVisibility(View.VISIBLE);
+                shopTimeOpen.setVisibility(View.VISIBLE);
+                buttonProfileShop.setVisibility(View.VISIBLE);
+                buttonUseService.setVisibility(View.VISIBLE);
+                closeButton.setVisibility(View.VISIBLE);
 
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                onCloseShopInfomation();
+                closeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick (View v) {
+                        onCloseShopInfomation();
+                    }
+                });
+
+                buttonProfileShop.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("Debug", "Click Store Profile");
+                        onCloseShopInfomation();
+                        replaceFragment(StoreProfileFragment.newInstance(marker.getTitle(), marker.getSnippet(), bp_count_use));
+                        setAllowClickMap(false);
+                    }
+                });
+
+                buttonUseService.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onCloseShopInfomation();
+                        Intent intent = new Intent(HomeActivity.this, DamageActivity.class);
+                        intent.putExtra("bp_id", bp_id);
+                        startActivity(intent);
+                    }
+                });
             }
-        });
+        }
+
 
 //        Toast.makeText(HomeActivity.this, marker.getTitle(), Toast.LENGTH_SHORT).show();
         return true;
     }
 
+    public void setAllowClickMap(boolean allow) {
+        allowClickMap = allow;
+    }
+
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
+    }
+
+    private void replaceFragment (Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
+        Log.d("Debug", "Open Fragment");
     }
 }

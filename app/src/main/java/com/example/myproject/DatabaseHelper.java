@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String databaseName = "MyProjectDatabase";
-    private static final int databaseVersion = 4;
+    private static final int databaseVersion = 5;
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, databaseName, null, databaseVersion);
@@ -23,11 +23,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase MyDatabase) {
         Log.d("Debug", "Create Database");
         MyDatabase.execSQL("CREATE TABLE User (user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_username VARCHAR(30), user_password VARCHAR(30), user_email VARCHAR(50), user_firstname VARCHAR(50), user_lastname VARCHAR(50), user_phone CHAR(10), user_picture BINARY, user_lat VARCHAR(12), user_lng VARCHAR(12))");
+        MyDatabase.execSQL("CREATE TABLE Bike_repair (bp_id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INT(12) DEFAULT 0, bp_name VARCHAR(50), bp_phone CHAR(10), bp_details TEXT, bp_open TIME, bp_close TIME, user_picture BINARY, user_lat VARCHAR(12), user_lng VARCHAR(12), bp_state INT(12))");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase MyDatabase, int i, int i1) {
-        MyDatabase.execSQL("Drop Table if exists allusers");
+        MyDatabase.execSQL("Drop Table if exists User");
+        MyDatabase.execSQL("Drop Table if exists Bike_repair");
     }
 
     public Boolean insertData(String username, String email, String phone, String password) {
@@ -67,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Boolean checkHasUsernameLogin (String email, String password) {
         SQLiteDatabase MyDatabase = this.getWritableDatabase();
-        Cursor cursor = MyDatabase.rawQuery("SELECT * FROM User WHERE ( user_email = ? OR user_email = ? OR user_phone = ? ) AND user_password = ?", new String[]{email, email, email, password});
+        Cursor cursor = MyDatabase.rawQuery("SELECT * FROM User WHERE ( user_username = ? OR user_email = ? OR user_phone = ? ) AND user_password = ?", new String[]{email, email, email, password});
 
         if (cursor.getCount() > 0)
             return true;

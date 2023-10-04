@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/green"
+        android:background="@color/blue"
         android:alpha="0.6"/>
 
     <androidx.cardview.widget.CardView
@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Let's Get Started!"
-                android:textColor="@color/green"
+                android:textColor="@color/blue"
                 android:textSize="32sp"
                 android:textStyle="bold" />
 
@@ -161,10 +161,10 @@
                 android:id="@+id/signUpBtn"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/btn_background2"
+                android:background="@color/blue"
                 android:elevation="10dp"
                 android:text="Register"
-                android:textColor="#ffff"
+                android:textColor="@color/white"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 android:translationZ="10dp" />
@@ -189,7 +189,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="LOGIN"
-                    android:textColor="@color/youngGreen"/>
+                    android:textColor="@color/blue"/>
             </LinearLayout>
 
         </LinearLayout>
