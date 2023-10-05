@@ -1,6 +1,7 @@
 package com.example.myproject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -12,7 +13,7 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class ViewholderActivity extends AppCompatActivity {
 
-    BottomNavigationView nav; // เปลี่ยนเป็น BottomNavigationView แทน BottomNavigationItemView
+    BottomNavigationView nav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,20 +27,20 @@ public class ViewholderActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.home:
+                        // Handle Home item click (replace with your logic)
                         Toast.makeText(ViewholderActivity.this, "Home", Toast.LENGTH_SHORT).show();
-                        break;
+                        return true;
                     case R.id.notification:
+                        // Handle Notification item click (replace with your logic)
                         Toast.makeText(ViewholderActivity.this, "Notification", Toast.LENGTH_SHORT).show();
-                        break;
+                        return true;
                     case R.id.profile:
+                        // Handle Profile item click (replace with your logic)
                         Toast.makeText(ViewholderActivity.this, "Profile", Toast.LENGTH_SHORT).show();
-                        break;
-//                    case R.id.setting:
-//                        Toast.makeText(ViewholderActivity.this, "Setting", Toast.LENGTH_SHORT).show();
-//                        break;
+                        return true;
                     default:
+                        return false;
                 }
-                return true;
             }
         });
     }

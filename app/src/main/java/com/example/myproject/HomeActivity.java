@@ -1,10 +1,13 @@
 package com.example.myproject;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,6 +36,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -50,7 +55,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, HomeActivity_MarkerClick, GoogleMap.OnMarkerClickListener {
+public class HomeActivity extends ViewholderActivity implements OnMapReadyCallback, HomeActivity_MarkerClick, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -60,11 +65,27 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Map<Marker, MarkerInfo> markerToIndexMap = new HashMap<>();
 
+    private ButtomNavbar bottomNavigationHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        BottomNavigationView nav = findViewById(R.id.bottomNavigationView);
+        nav.setSelectedItemId(R.id.home);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userRole = sharedPreferences.getString("user_role", "User");
+        ButtomNavbar navbar = new ButtomNavbar(this, nav);
+        if ("Store".equals(userRole)) {
+            navbar.updateStoreMenuItemVisibility(true);
+        } else {
+            navbar.updateStoreMenuItemVisibility(false);
+        }
+        navbar.setupBottomNavigation();
+
+        bottomNavigationHandler = new ButtomNavbar(this, nav);
+        bottomNavigationHandler.setupBottomNavigation();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(AppConfig.BASE_URL)
@@ -81,7 +102,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
         } else {
-            initializeMap();  //บรรทัดที่36
+            initializeMap();
         }
     }
 
@@ -101,7 +122,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initializeMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.MyMap);
-        mapFragment.getMapAsync(this); //บรรทัดที่58
+        mapFragment.getMapAsync(this);
     }
 
     @Override

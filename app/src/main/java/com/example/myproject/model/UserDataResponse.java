@@ -22,6 +22,11 @@ public class UserDataResponse {
     @SerializedName("user_lng")
     private String user_lng;
 
+    @SerializedName("user_role")
+    private String user_role;
+
+    @SerializedName("bp_id")
+    private Integer bp_ip;
     @SerializedName("msg")
     private String msg;
 
@@ -29,6 +34,10 @@ public class UserDataResponse {
         return msg;
     }
     public Integer getUser_ID() { return user_id; }
+
+    public Integer getStoreID() { return bp_ip; }
+
+    public String getRole() { return user_role; }
 
     public UserDataResponse(Integer user_id, String user_username, String user_password, String user_firstname, String user_lastname, String user_phone, String user_picture, String user_lat, String user_lng) {
         this.user_id = user_id;

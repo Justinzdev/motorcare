@@ -1,5 +1,6 @@
 package com.example.myproject.model;
 
+import com.google.gson.JsonArray;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONArray;
@@ -31,6 +32,13 @@ public class damageResponseData {
 
     @SerializedName("msg")
     private String msg;
+
+    @SerializedName("value")
+    private JsonArray value;
+
+    public JsonArray getValue() {
+        return value;
+    }
 
     public String getMsg() {
         return msg;

@@ -25,6 +25,9 @@ public class userData {
     @SerializedName("user_email")
     private String user_email;
 
+    @SerializedName("user_role")
+    private String user_role;
+
     public userData() {
 
     }

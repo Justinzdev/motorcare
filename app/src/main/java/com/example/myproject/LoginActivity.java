@@ -73,10 +73,14 @@ public class LoginActivity extends AppCompatActivity {
                                 if (userDataResponse != null) {
                                     String msg = userDataResponse.getMsg();
                                     Integer user_id = userDataResponse.getUser_ID();
+                                    String user_role = userDataResponse.getRole();
+                                    Integer bp_id = userDataResponse.getStoreID();
 
                                     SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putInt("user_id", user_id);
+                                    editor.putString("user_role", user_role);
+                                    if(bp_id != null) editor.putInt("bp_id", bp_id);
                                     editor.apply();
 
                                     Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();

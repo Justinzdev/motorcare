@@ -7,15 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <!--    <FrameLayout-->
-<!--        android:id="@+id/MyMap"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        android:name="com.google.android.gms.maps.SupportMapFragment"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/MyMap"
         android:layout_width="match_parent"
@@ -36,28 +27,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+
+    <include
+        android:id="@+id/bottomNavigationContainer"
+        layout="@layout/viewholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blue"
-        app:itemTextColor="@color/white"
-        app:itemIconTint="@color/white"
+        android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemIconSize="30dp"/>
+    />
 
     <View
         android:id="@+id/Shop_View"
         android:layout_width="413dp"
         android:layout_height="326dp"
+        android:layout_marginTop="216dp"
         android:background="#FFFFFF"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationContainer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
@@ -86,7 +77,6 @@
         android:textColor="#000000"
         android:textSize="16sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.044"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +91,6 @@
         android:fontFamily="@font/allerta_stencil"
         android:text="ดูโปรไฟล์ร้านค้า"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="@+id/Shop_View"
         app:layout_constraintHorizontal_bias="0.043"
         app:layout_constraintStart_toStartOf="@+id/Shop_View"
@@ -133,11 +122,10 @@
         android:fontFamily="@font/allerta_stencil"
         android:text="ปิด"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="@+id/Shop_View"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/Shop_View"
+        app:layout_constraintTop_toTopOf="@+id/shopName"
         app:layout_constraintVertical_bias="0.03" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
