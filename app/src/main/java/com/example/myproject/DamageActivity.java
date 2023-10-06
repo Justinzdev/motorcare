@@ -68,6 +68,8 @@ public class DamageActivity extends AppCompatActivity {
             EditText damageEditText = findViewById(R.id.damageEditText);
             EditText vehicleColorEditText = findViewById(R.id.vehicleColorEditText);
 
+            // Get User Location (Lat, Lng)
+
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

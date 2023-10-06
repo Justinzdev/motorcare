@@ -30,6 +30,9 @@ public class damageData {
     @SerializedName("dm_vehicle")
     private String dm_vehicle;
 
+    @SerializedName("dm_status")
+    private Integer dm_status;
+
     public damageData () {}
 
     public void damageAdd (Integer bp_id, Integer user_id, String dm_brand, String dm_color, String dm_detilas, JsonArray dm_picture, String dm_vehicle) {

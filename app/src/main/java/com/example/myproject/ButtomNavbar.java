@@ -29,7 +29,7 @@ public class ButtomNavbar {
                         Navigate(HomeActivity.class);
                         break;
                     case R.id.notification:
-                        Toast.makeText(activity, "Notification", Toast.LENGTH_SHORT).show();
+                        Navigate(NotificationActivity.class);
                         break;
                     case R.id.worklists:
                         Navigate(WorkingListsActivity.class);

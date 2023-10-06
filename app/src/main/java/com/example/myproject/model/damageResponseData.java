@@ -30,6 +30,9 @@ public class damageResponseData {
     @SerializedName("dm_vehicle")
     private String dm_vehicle;
 
+    @SerializedName("dm_status")
+    private Integer dm_status;
+
     @SerializedName("msg")
     private String msg;
 

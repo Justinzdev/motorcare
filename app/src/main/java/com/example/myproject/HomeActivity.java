@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,19 +32,36 @@ import com.example.myproject.model.UserDataResponse;
 import com.example.myproject.model.bikeRepairData;
 import com.example.myproject.model.bikeRepairResponse;
 import com.example.myproject.model.userData;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.maps.DirectionsApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PendingResult;
+import com.google.maps.android.PolyUtil;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.TravelMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,10 +87,16 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
 
     private ButtomNavbar bottomNavigationHandler;
 
+    private static final long MIN_TIME_BETWEEN_UPDATES = 1000; // 1 seconds
+    private static final float MIN_DISTANCE_CHANGE_FOR_UPDATES = 10.0f; // 10 meters
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        requestLocationPermissions();
+
 
         BottomNavigationView nav = findViewById(R.id.bottomNavigationView);
         nav.setSelectedItemId(R.id.home);
@@ -106,19 +132,26 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
         }
     }
 
+    private void requestLocationPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
     // Handle the result of permission request
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, proceed with map initialization
                 initializeMap();
             }
         }
     }
 
-    // Initialize the map
     private void initializeMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.MyMap);
@@ -129,8 +162,30 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {mMap.setMyLocationEnabled(true);
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(false);
             mMap.setOnMarkerClickListener(this);
+
+            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            Integer user_id = sharedPreferences.getInt("user_id", 0);
+            String userRole = sharedPreferences.getString("user_role", "User");
+
+            if (!"Store".equals(userRole)) {
+                float hue = 120;
+                BitmapDescriptor userLocationIcon = BitmapDescriptorFactory.defaultMarker(hue);
+
+                MyLocationListener locationListener = new MyLocationListener(mMap, userLocationIcon, user_id);
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+                locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        MIN_TIME_BETWEEN_UPDATES,
+                        MIN_DISTANCE_CHANGE_FOR_UPDATES,
+                        locationListener
+                );
+            } else {
+                requestDirections();
+            }
 
             Call<bikeRepairResponse> call = apiService.getData();
             call.enqueue(new Callback<bikeRepairResponse>() {
@@ -194,6 +249,72 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
                     Log.e("API Request Failed", t.getMessage());
                 }
             });
+        }
+    }
+
+    public void requestDirections() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        Integer bp_id = sharedPreferences.getInt("bp_id", 0);
+        String originLatRaw = sharedPreferences.getString("originLat", "0.00");
+        String originLngRaw = sharedPreferences.getString("originLng", "0.00");
+        String destLatRaw = sharedPreferences.getString("destLat", "0.00");
+        String destLngRaw = sharedPreferences.getString("destLng", "0.00");
+        Integer bp_id_working = sharedPreferences.getInt("bp_id_working", 0);
+
+        double originLat = Double.parseDouble(originLatRaw);
+        double originLng = Double.parseDouble(originLngRaw);
+        double destLat = Double.parseDouble(destLatRaw);
+        double destLng = Double.parseDouble(destLngRaw);
+
+        if(originLat != 0.00 && originLng != 0.00 && destLat != 0.00 && destLng != 0.00 && bp_id_working == bp_id) {
+            com.google.maps.model.LatLng destinationLatLng = new com.google.maps.model.LatLng(destLat, destLng);
+
+            GeoApiContext context = new GeoApiContext.Builder()
+                    .apiKey(AppConfig.GoogleAPI)
+                    .build();
+
+            DirectionsApi.newRequest(context)
+                    .origin(new com.google.maps.model.LatLng(originLat, originLng))
+                    .destination(destinationLatLng)
+                    .mode(TravelMode.DRIVING)
+                    .setCallback(new PendingResult.Callback<DirectionsResult>() {
+                        @Override
+                        public void onResult(DirectionsResult result) {
+                            if (result != null && result.routes.length > 0) {
+                                List<LatLng> points = PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath());
+
+                                PolylineOptions polylineOptions = new PolylineOptions()
+                                        .addAll(points)
+                                        .width(20)
+                                        .color(Color.RED);
+
+                                runOnUiThread(() -> {
+                                    mMap.addPolyline(polylineOptions);
+
+                                    mMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(destLat, destLng))
+                                            .title("Destination")
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+                                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                    for (LatLng point : points) {
+                                        builder.include(point);
+                                    }
+                                    LatLngBounds bounds = builder.build();
+
+                                    int padding = 100;
+                                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                                    mMap.animateCamera(cameraUpdate);
+
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable e) {
+                            // Handle failure
+                        }
+                    });
         }
     }
 
@@ -266,9 +387,6 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
                 });
             }
         }
-
-
-//        Toast.makeText(HomeActivity.this, marker.getTitle(), Toast.LENGTH_SHORT).show();
         return true;
     }
 

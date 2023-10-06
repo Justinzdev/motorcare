@@ -53,14 +53,22 @@ public class WorkingListsAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.working_list_items, null);
         }
 
-        TextView textTitle = view.findViewById(R.id.textTitle);
-        TextView textDescription = view.findViewById(R.id.textDescription);
+        TextView textTitle = view.findViewById(R.id.workingTitle);
+        TextView textDescription = view.findViewById(R.id.workingDescription);
+        TextView textUsername = view.findViewById(R.id.workingUsername);
+        TextView textPhone = view.findViewById(R.id.workingPhone);
+        TextView textLat = view.findViewById(R.id.workingLat);
+        TextView textLng = view.findViewById(R.id.workingLng);
         Button confirmButton = view.findViewById(R.id.confirmButton);
         Button cancelButton = view.findViewById(R.id.cancelButton);
 
         WorkingLists currentCase = caseList.get(position);
         textTitle.setText(currentCase.getTitle());
         textDescription.setText(currentCase.getDescription());
+        textUsername.setText("ชื่อลูกค้า: " + currentCase.getUsername());
+        textPhone.setText("เบอร์โทรศัพท์: " + currentCase.getPhone());
+        textLat.setText(currentCase.getLat());
+        textLng.setText(currentCase.getLng());
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
