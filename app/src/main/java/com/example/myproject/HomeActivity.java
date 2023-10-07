@@ -26,11 +26,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.myproject.api.bikeRepairService;
+import com.example.myproject.api.damageService;
 import com.example.myproject.api.userService;
 import com.example.myproject.model.MarkerInfo;
 import com.example.myproject.model.UserDataResponse;
 import com.example.myproject.model.bikeRepairData;
 import com.example.myproject.model.bikeRepairResponse;
+import com.example.myproject.model.damageResponseData;
 import com.example.myproject.model.userData;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -46,6 +48,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -86,6 +89,13 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
     private Map<Marker, MarkerInfo> markerToIndexMap = new HashMap<>();
 
     private ButtomNavbar bottomNavigationHandler;
+
+    private static damageService damageApiSerivce;
+
+    private Polyline currentPolyline;
+
+    private List<LatLng> locationList = new ArrayList<>();
+
 
     private static final long MIN_TIME_BETWEEN_UPDATES = 1000; // 1 seconds
     private static final float MIN_DISTANCE_CHANGE_FOR_UPDATES = 10.0f; // 10 meters
@@ -196,8 +206,6 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
                         if (bikeResponse != null) {
                             JsonArray value = bikeResponse.getValue();
                             if (value != null) {
-                                List<LatLng> locationList = new ArrayList<>();
-
                                 for (JsonElement locationElement : value) {
                                     if (locationElement.isJsonObject()) {
                                         JsonObject locationObject = locationElement.getAsJsonObject();
@@ -260,13 +268,75 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
         String destLatRaw = sharedPreferences.getString("destLat", "0.00");
         String destLngRaw = sharedPreferences.getString("destLng", "0.00");
         Integer bp_id_working = sharedPreferences.getInt("bp_id_working", 0);
+        Integer damage_id_working = sharedPreferences.getInt("damage_id_working", 0);
 
         double originLat = Double.parseDouble(originLatRaw);
         double originLng = Double.parseDouble(originLngRaw);
         double destLat = Double.parseDouble(destLatRaw);
         double destLng = Double.parseDouble(destLngRaw);
 
-        if(originLat != 0.00 && originLng != 0.00 && destLat != 0.00 && destLng != 0.00 && bp_id_working == bp_id) {
+        if(originLat != 0.00 && originLng != 0.00 && destLat != 0.00 && destLng != 0.00 && bp_id_working == bp_id && damage_id_working != 0) {
+            Button buttonFinish = findViewById(R.id.buttonFinishJob);
+            buttonFinish.setVisibility(View.VISIBLE);
+
+            buttonFinish.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(AppConfig.BASE_URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    damageApiSerivce = retrofit.create(damageService.class);
+
+                    Call<damageResponseData> call = damageApiSerivce.finishDamageJob(damage_id_working, bp_id_working);
+                    call.enqueue(new Callback<damageResponseData>() {
+                        @Override
+                        public void onResponse(Call<damageResponseData> call, Response<damageResponseData> response) {
+                            if (response.isSuccessful()) {
+                                damageResponseData dataResponse = response.body();
+                                if (dataResponse != null) {
+                                    if (currentPolyline != null) {
+                                        currentPolyline.remove();
+                                        currentPolyline = null;
+                                    }
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.remove("bp_id_working");
+                                    editor.remove("originLat");
+                                    editor.remove("originLng");
+                                    editor.remove("destLat");
+                                    editor.remove("destLng");
+                                    editor.apply();
+                                    buttonFinish.setVisibility(View.INVISIBLE);
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(locationList.get(0)));
+                                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                                    Toast.makeText(HomeActivity.this, "จบงานนี้เรียบร้อยแล้ว", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                String errorResponse = null;
+                                try {
+                                    errorResponse = response.errorBody().string();
+                                    Gson gson = new Gson();
+                                    damageResponseData damageResponse = gson.fromJson(errorResponse, damageResponseData.class);
+
+                                    if (damageResponse != null) {
+                                        String msg = damageResponse.getMsg();
+                                        Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<damageResponseData> call, Throwable t) {
+                            Log.e("API Request Failed", t.getMessage());
+                        }
+                    });
+                }
+            });
+
             com.google.maps.model.LatLng destinationLatLng = new com.google.maps.model.LatLng(destLat, destLng);
 
             GeoApiContext context = new GeoApiContext.Builder()
@@ -289,7 +359,7 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
                                         .color(Color.RED);
 
                                 runOnUiThread(() -> {
-                                    mMap.addPolyline(polylineOptions);
+                                    currentPolyline = mMap.addPolyline(polylineOptions);
 
                                     mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(destLat, destLng))
@@ -305,7 +375,6 @@ public class HomeActivity extends ViewholderActivity implements OnMapReadyCallba
                                     int padding = 100;
                                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                                     mMap.animateCamera(cameraUpdate);
-
                                 });
                             }
                         }

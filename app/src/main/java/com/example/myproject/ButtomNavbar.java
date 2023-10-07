@@ -35,7 +35,7 @@ public class ButtomNavbar {
                         Navigate(WorkingListsActivity.class);
                         break;
                     case R.id.profile:
-                        Toast.makeText(activity, "Profile", Toast.LENGTH_SHORT).show();
+                        Navigate(ProfileActivity.class);
                         break;
                     default:
                         break;

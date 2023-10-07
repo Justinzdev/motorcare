@@ -168,6 +168,7 @@ public class WorkingListsActivity extends AppCompatActivity implements WorkingLi
                         editor.putString("destLat", userLocation_Lat);
                         editor.putString("destLng", userLocation_Lng);
                         editor.putInt("bp_id_working", bp_id);
+                        editor.putInt("damage_id_working", clickedItem.getID());
                         editor.apply();
 
                         Log.d("Debug", userLocation_Lat);

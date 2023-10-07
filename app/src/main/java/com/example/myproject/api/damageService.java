@@ -15,12 +15,18 @@ public interface damageService {
 
     @PATCH("/api/damage/confirm/{dm_id}/{bp_id}")
     Call<damageResponseData> confirmDamageJob (
-        @Path("dm_id") Integer dm_status,
+        @Path("dm_id") Integer dm_id,
         @Path("bp_id") Integer bp_id
     );
     @PATCH("/api/damage/cancel/{dm_id}/{bp_id}")
     Call<damageResponseData> cancelDamageJob (
-            @Path("dm_id") Integer dm_status,
+            @Path("dm_id") Integer dm_id,
+            @Path("bp_id") Integer bp_id
+    );
+
+    @PATCH("/api/damage/finish/{dm_id}/{bp_id}")
+    Call<damageResponseData> finishDamageJob (
+            @Path("dm_id") Integer dm_id,
             @Path("bp_id") Integer bp_id
     );
 }
